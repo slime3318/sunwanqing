@@ -19,18 +19,18 @@
         />
       </div>
       <div class="form-item code-row">
-        <label>验证码</label>
-        <input
-          v-model="codeInput"
-          type="text"
-          placeholder="输入验证码"
-        />
-        <canvas
-          ref="canvasRef"
-          @click="drawCaptcha"
-          class="captcha-canvas"
-        ></canvas>
-      </div>
+    <label>验证码</label>
+    <input
+      v-model="codeInput"
+      type="text"
+      placeholder="输入计算结果"
+    />
+    <canvas
+      ref="canvasRef"
+      @click="drawCaptcha"
+      class="captcha-canvas"
+    ></canvas>
+  </div>
       <div class="error-tip">{{ errorMsg }}</div>
       <button class="login-btn" @click="handleLogin">登录</button>
     </div>
@@ -45,15 +45,28 @@ const password = ref('')
 const codeInput = ref('')
 const errorMsg = ref('')
 const canvasRef = ref(null)
-let captchaCode = ref('')
+let captchaAnswer = ref(0)
+let captchaText = ref('')
 
-function getRandomCode(len = 4) {
-  const chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-  let str = ''
-  for (let i = 0; i < len; i++) {
-    str += chars[Math.floor(Math.random() * chars.length)]
+function randomInt(min, max) {
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+function generateArithmetic() {
+  const isAdd = Math.random() > 0.5
+  let a, b
+
+  if (isAdd) {
+    a = randomInt(1, 9)
+    b = randomInt(1, 10 - a)
+    captchaAnswer.value = a + b
+    captchaText.value = `${a} + ${b} = ?`
+  } else {
+    a = randomInt(1, 10)
+    b = randomInt(0, a)
+    captchaAnswer.value = a - b
+    captchaText.value = `${a} - ${b} = ?`
   }
-  return str
 }
 
 const drawCaptcha = () => {
@@ -65,12 +78,12 @@ const drawCaptcha = () => {
   ctx.fillStyle = '#eeeeee'
   ctx.fillRect(0, 0, 120, 40)
 
-  captchaCode.value = getRandomCode(4)
-  ctx.font = 'bold 26px Arial'
+  generateArithmetic()
+  ctx.font = 'bold 22px Arial'
   ctx.fillStyle = '#222'
-  ctx.fillText(captchaCode.value, 12, 30)
+  ctx.fillText(captchaText.value, 10, 30)
 
-  for (let i = 0; i < 4; i++) {
+  for (let i = 0; i < 3; i++) {
     ctx.strokeStyle = '#999'
     ctx.beginPath()
     ctx.moveTo(Math.random() * 120, Math.random() * 40)
@@ -98,7 +111,7 @@ const handleLogin = () => {
     return
   }
 
-  if (codeInput.value.toUpperCase() !== captchaCode.value) {
+  if (Number(codeInput.value) !== captchaAnswer.value) {
     errorMsg.value = '验证码错误'
     drawCaptcha()
     return
