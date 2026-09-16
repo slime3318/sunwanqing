@@ -4,10 +4,11 @@
 
 ## 在线预览
 
-**在线地址：待填写**
+直接用浏览器打开即可查看，无需安装任何环境：
 
-> 部署于 Cloudflare Pages，直接用浏览器打开即可查看，无需安装任何环境。
-> 项目创建完成后，将上面一行替换为实际的 `xxx.pages.dev` 地址。
+**https://login-homework.pages.dev/**
+
+> 部署于 Cloudflare Pages。
 
 ## 页面预览
 
