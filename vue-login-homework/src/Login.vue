@@ -129,15 +129,17 @@ const handleLogin = () => {
 
 <style scoped>
 .login-container {
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  min-height: 100vh;
+  padding: 16px;
   background-color: #f3f4f6;
   display: flex;
   justify-content: center;
   align-items: center;
 }
 .login-box {
-  width: 380px;
+  width: 420px;
+  max-width: 100%;
   background: #ffffff;
   padding: 35px;
   border-radius: 10px;
@@ -166,12 +168,17 @@ h2 {
 }
 .form-item input {
   flex: 1;
+  min-width: 0;
   padding: 10px 12px;
   border: 1px solid #cccccc;
   border-radius: 6px;
   font-size: 15px;
 }
+.code-row label {
+  flex-shrink: 0;
+}
 .captcha-canvas {
+  flex-shrink: 0;
   cursor: pointer;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -194,6 +201,14 @@ h2 {
 }
 .login-btn:hover {
   background: #64b5ff;
+}
+@media (max-width: 420px) {
+  .login-box {
+    padding: 24px 20px;
+  }
+  .form-item label {
+    width: 56px;
+  }
 }
 </style>
 
