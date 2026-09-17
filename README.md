@@ -6,8 +6,8 @@
 
 | 项目 | 网址 |
 | --- | --- |
-| **马拉松赛事报名管理系统**（主项目） | **<https://marathon-registration.pages.dev>** |
-| 用户登录页面（作业） | <https://login-homework.pages.dev> |
+| **马拉松赛事报名管理系统**（主项目） | **[https://marathon-registration.pages.dev](https://marathon-registration.pages.dev)** |
+| 用户登录页面（作业） | [https://login-homework.pages.dev](https://login-homework.pages.dev) |
 
 > 两个站点均部署于 Cloudflare Pages。
 
@@ -17,7 +17,7 @@
 
 一个前后端分离的马拉松赛事报名管理系统，覆盖用户管理、赛事管理、报名与审核、选手信息管理、统计看板、RBAC 权限等模块，可部署为公开访问的网站。
 
-**在线访问：<https://marathon-registration.pages.dev>**
+**在线访问：[https://marathon-registration.pages.dev](https://marathon-registration.pages.dev)**
 
 技术栈：React + Redux Toolkit + Vite / Node.js + Express + MongoDB / Docker。
 
@@ -36,7 +36,7 @@
 
 直接用浏览器打开即可查看，无需安装任何环境：
 
-**<https://login-homework.pages.dev>**
+**[https://login-homework.pages.dev](https://login-homework.pages.dev)**
 
 > 部署于 Cloudflare Pages。
 

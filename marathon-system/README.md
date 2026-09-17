@@ -2,7 +2,7 @@
 
 一个前后端分离的马拉松赛事报名管理系统，覆盖 **用户管理、赛事项目管理、报名管理、报名审核、选手信息管理、统计看板、系统权限** 七大模块，可部署为公开访问的网站。
 
-**在线访问：<https://marathon-registration.pages.dev>**
+**在线访问：[https://marathon-registration.pages.dev](https://marathon-registration.pages.dev)**
 
 > 前端已部署于 Cloudflare Pages。后端 API 与数据库的部署步骤见第五章；完成后需在 Cloudflare Pages 中把环境变量 `VITE_API_BASE_URL` 指向后端地址并重新部署。
 
