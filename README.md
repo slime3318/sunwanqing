@@ -1,4 +1,21 @@
-# 用户登录页面展示
+# 项目仓库
+
+本仓库包含两个项目：
+
+## 1. 马拉松赛事报名管理系统（主项目）
+
+一个前后端分离的马拉松赛事报名管理系统，覆盖用户管理、赛事管理、报名与审核、选手信息管理、统计看板、RBAC 权限等模块，可部署为公开访问的网站。
+
+技术栈：React + Redux Toolkit + Vite / Node.js + Express + MongoDB / Docker。
+
+- 源码与完整文档：[`marathon-system/`](marathon-system/README.md)
+- 前端页面：首页、赛事列表与详情、在线报名、我的报名、个人中心、管理后台（数据概览 / 赛事管理 / 报名管理 / 用户与权限）
+- 后端接口：`/api/auth`、`/api/users`、`/api/events`、`/api/registrations`、`/api/stats`
+- 本地运行：`cd marathon-system/server && npm install && npm run seed && npm run dev`，另开终端 `cd marathon-system/web && npm install && npm run dev`
+- 部署方式：MongoDB Atlas + Render + Cloudflare Pages，或 `docker compose up -d --build`
+- 冒烟测试：`cd marathon-system/server && npm run smoke`（验证注册→建赛事→报名→支付→审核→统计全闭环）
+
+## 2. 用户登录页面展示（作业）
 
 一个基于 Vue 3 + Vite 的用户登录页面作业，包含用户名密码输入、算术验证码、前端表单校验与登录成功提示。
 

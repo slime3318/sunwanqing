@@ -1,0 +1,28 @@
+# Render 蓝图：在 Render 控制台选择 "New > Blueprint" 并指向本仓库即可自动创建后端服务。
+# 部署前请在后端服务的 Environment 中填写 MONGODB_URI、JWT_SECRET 与 CORS_ORIGIN。
+services:
+  - type: web
+    name: marathon-api
+    runtime: node
+    plan: free
+    rootDir: marathon-system/server
+    buildCommand: npm install --omit=dev --no-audit --no-fund
+    startCommand: node src/index.js
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: SMS_PROVIDER
+        value: mock
+      - key: MAIL_PROVIDER
+        value: mock
+      - key: PAYMENT_PROVIDER
+        value: mock
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: CORS_ORIGIN
+        sync: false

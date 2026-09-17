@@ -1,0 +1,48 @@
+services:
+  mongo:
+    image: mongo:7
+    container_name: marathon-mongo
+    restart: unless-stopped
+    environment:
+      MONGO_INITDB_DATABASE: marathon
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - '27017:27017'
+
+  api:
+    build: ./server
+    container_name: marathon-api
+    restart: unless-stopped
+    depends_on:
+      - mongo
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      MONGODB_URI: mongodb://mongo:27017/marathon
+      JWT_SECRET: ${JWT_SECRET:-please-change-this-secret}
+      JWT_EXPIRES_IN: 7d
+      CORS_ORIGIN: ${CORS_ORIGIN:-http://localhost:8080}
+      SMS_PROVIDER: mock
+      MAIL_PROVIDER: mock
+      PAYMENT_PROVIDER: mock
+      SEED_ADMIN_PHONE: ${SEED_ADMIN_PHONE:-13800000000}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@marathon.local}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-Admin123456}
+    ports:
+      - '4000:4000'
+
+  web:
+    build:
+      context: ./web
+      args:
+        VITE_API_BASE_URL: /api
+    container_name: marathon-web
+    restart: unless-stopped
+    depends_on:
+      - api
+    ports:
+      - '8080:80'
+
+volumes:
+  mongo-data:
