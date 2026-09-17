@@ -2,6 +2,10 @@
 
 一个前后端分离的马拉松赛事报名管理系统，覆盖 **用户管理、赛事项目管理、报名管理、报名审核、选手信息管理、统计看板、系统权限** 七大模块，可部署为公开访问的网站。
 
+**在线访问：<https://marathon-registration.pages.dev>**
+
+> 前端已部署于 Cloudflare Pages。后端 API 与数据库的部署步骤见第五章；完成后需在 Cloudflare Pages 中把环境变量 `VITE_API_BASE_URL` 指向后端地址并重新部署。
+
 - 前端：React 18 + Redux Toolkit + React Router + Vite
 - 后端：Node.js + Express + MongoDB (Mongoose)
 - 部署：MongoDB Atlas（数据库，免费版）+ Render（后端，免费版）+ Cloudflare Pages（前端，免费）
@@ -209,7 +213,7 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
    - Build command：`npm install && npm run build`
    - Build output directory：`dist`
 3. 环境变量：`VITE_API_BASE_URL = https://<你的服务>.onrender.com/api`
-4. 部署完成后得到公开网址 `https://<项目名>.pages.dev`。
+4. 部署完成后得到公开网址。本项目当前使用的地址是 **<https://marathon-registration.pages.dev>**。
 5. **回填 CORS**：把该网址填入 Render 的 `CORS_ORIGIN`，保存后 Render 会自动重新部署。
 
 `web/public/_redirects` 已配置 `/* /index.html 200`，保证 React Router 的深链接（如 `/events/xxx`）刷新不 404。
