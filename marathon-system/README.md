@@ -87,17 +87,18 @@ marathon-system/
       regression.test.js      # 回归测试：populate 字段裁剪下的虚拟字段、关键字查询转义
   web/
     Dockerfile
-    nginx.conf                # SPA 回退 + /api 反向代理
+    nginx.conf                # SPA 回退 + /api 反向代理（自托管场景）
     .env.example
-    public/_redirects         # Cloudflare Pages SPA 路由
     src/
-      api/                    # axios 实例（自动带 token、401 拦截）+ 接口定义
+      api/                    # axios 实例（自动带 token、401 拦截、响应信封校验）+ 接口定义
       store/                  # Redux Toolkit store 与 5 个 slice
-      components/             # Layout、路由守卫、表单控件、分页、提示
+      components/             # Layout、路由守卫、全局错误边界、表单控件、分页、提示
       pages/                  # 首页/登录/注册/赛事/报名/个人中心
       pages/admin/            # 数据概览/赛事管理/报名管理/用户与权限
       utils/                  # 格式化、前端校验（与后端规则一致）
       styles/index.css        # 全局样式（响应式，含移动端适配）
+    tests/
+      reducers.test.js        # 回归测试：接口异常返回时列表状态兜底，防止整页白屏
 ```
 
 ---
@@ -143,9 +144,14 @@ cd marathon-system/server
 npm test                # 单元测试（25 项，无需数据库）：身份证校验、RBAC 权限矩阵、zod 表单校验、分页边界、虚拟字段与关键字转义回归
 npm run smoke           # 端到端冒烟测试（23 项），需要可用的 MONGODB_URI，跑完自动清理测试数据
 SMOKE_KEEP=1 npm run smoke   # 保留冒烟测试数据便于人工查看
+
+cd ../web
+npm test                # 前端回归测试（8 项，无需浏览器）：接口返回 HTML/空值时列表状态兜底，防止白屏
 ```
 
 冒烟测试覆盖的 23 个断言：管理员登录 → 发送/校验短信验证码 → 选手注册 → 创建赛事与组别 → 发布赛事 → 非法身份证拦截 → 报名占位 → 支付 → 并发抢名额不超额 → 占用数写入一致 → 重复身份证拦截 → 审核通过并分配参赛号码 → 未支付不可审核 → 支付进入待审核 → 批量驳回 → 名额释放 → 选手查询自己的报名 → 按姓名筛选 → 导出 CSV → 统计收入与人数 → 分组明细 → 选手越权被拒（403）→ 未登录被拒（401）。
+
+前端回归测试覆盖：静态托管把未命中的 `/api` 路径回退成 `index.html` 并返回 200 时，`listOf` / `paginationOf` 兜底、各列表 reducer 不写入 `undefined`、`auth` 会话结果为 `null` 时不崩溃。
 
 覆盖：注册 → 建赛事 → 发布 → 非法身份证拦截 → 报名占位 → 支付 → 并发超额拦截 → 重复报名拦截 → 审核发号 → 批量驳回释放名额 → 查询/筛选/导出 → 统计 → RBAC 越权拦截。
 
@@ -208,6 +214,10 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
 
 `web/public/_redirects` 已配置 `/* /index.html 200`，保证 React Router 的深链接（如 `/events/xxx`）刷新不 404。
 
+> **实测说明**：Cloudflare Pages 对未命中静态文件的路径会**默认回退到 `index.html` 并返回 200**（已用 `/events/xxx`、`/api/events`、`/nonexistent.js` 三个路径逐一验证）。因此本项目**不再需要 `_redirects`**——它的 `/* /index.html 200` 规则会被 Cloudflare 判定为 `Infinite loop detected` 并忽略，白白刷一条警告。自托管（nginx）场景仍依赖 `nginx.conf` 里的 `try_files`。
+>
+> 这个默认回退有个副作用：**后端未部署时，`/api/*` 请求也会拿到 200 + HTML**。前端因此做了响应信封校验与列表兜底（见 `web/src/api/client.js` 的 `unwrap` 与 `web/src/store/helpers.js`），会明确提示「接口返回了非预期内容」而不是白屏。
+
 ### 步骤 4：验收清单
 
 - [ ] `GET /api/health` 正常返回
@@ -252,7 +262,7 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
 3. **体检证明上传**：接入对象存储（S3/OSS/Cloudflare R2），审核页面上传与预览图片，写入 `review.medicalCertificateUrl`。
 4. **证书与二维码签到**：审核通过后生成参赛证书 PDF 与签到二维码（`bibNumber` 已就绪），新增签到接口与现场核销页面。
 5. **Excel（.xlsx）导出**：当前导出为带 BOM 的 CSV（Excel 可直接打开）；如需多 Sheet/样式，可引入 `exceljs` 输出真正的 xlsx。
-6. **前端测试与 CI**：补充 Vitest + React Testing Library 单测，GitHub Actions 执行 `npm test`、前端构建与 `npm run smoke`。
+6. **前端测试扩充与 CI**：当前已有 8 项基于 `node:test` 的 reducer 回归测试；后续可补 Vitest + React Testing Library 的组件测试，并用 GitHub Actions 执行 `npm test`、前端构建与 `npm run smoke`。
 7. **可观测性**：接入结构化日志、错误上报与关键接口限流告警。
 8. **水平扩展**：名额占用依赖单文档原子更新，已验证无超额风险；如需多副本部署可引入 Redis 分布式锁与只读副本。
 
@@ -266,3 +276,20 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
 - 所有写操作先经 `zod` 校验，再经 RBAC 权限矩阵与赛事归属校验，前后端校验规则一致。
 - 身份证号在导出与列表展示时脱敏（`110**********1234`）。
 - 演示环境将验证码回显，**生产环境请将 `NODE_ENV` 设为 `production` 并替换 `JWT_SECRET`**。
+
+---
+
+## 九、常见故障排查
+
+| 现象 | 原因与解决 |
+| --- | --- |
+| 页面打开后**一闪变白屏** | 静态托管把未命中的 `/api` 路径回退成 `index.html`（200 + HTML），前端把 HTML 当成了 JSON 数据。已在 `api/client.js` 加响应信封校验、在 `store/helpers.js` 加列表兜底、并加了全局 `ErrorBoundary`，现在会显示明确的红色提示。若仍白屏，说明 API 地址（`VITE_API_BASE_URL`）没配好。 |
+| 公网页面所有接口报跨域 | 后端的 `CORS_ORIGIN` 与实际访问域名不一致。必须带 `https://`、不带结尾 `/`、不带 `www`，多域名用英文逗号分隔且不加空格。 |
+| 前端页脚/接口提示「无法连接后端服务」 | 后端未部署或 `VITE_API_BASE_URL` 未配置。这是后端上线前的预期状态。 |
+| Cloudflare 构建报 `Missing script: build` | 构建时没在 `marathon-system/web` 目录下执行。检查 Pages 的 **Root directory** 设置。 |
+| Cloudflare 提示 `_redirects` 无限循环 | 该规则已被 Cloudflare 拒绝并忽略；本项目已删除 `public/_redirects`，平台的默认 SPA 回退足够。 |
+| 后端启动报数据库连接超时 | MongoDB 服务未启动（本地）或 Atlas 白名单未加 `0.0.0.0/0`（云端）。 |
+| Atlas 注册报「出现了一个意想不到的问题」 | 注册表单依赖 Google reCAPTCHA，国内直连拿不到校验 token。改用 `Sign up with GitHub` 授权注册。 |
+| Render 首个请求很慢（约 30 秒） | 免费实例闲置 15 分钟后休眠，先访问一次 `/api/health` 唤醒。 |
+| 报名提示「该身份证号已报名本赛事」 | 设计如此：同一赛事下同一身份证只能有一条有效报名，取消或驳回后可重新报名。 |
+

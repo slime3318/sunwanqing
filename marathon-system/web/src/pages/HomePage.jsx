@@ -21,7 +21,7 @@ export default function HomePage() {
     dispatch(fetchEvents({ page: 1, pageSize: 3 }));
   }, [dispatch]);
 
-  const upcoming = list.slice(0, 3);
+  const upcoming = (list || []).slice(0, 3);
 
   return (
     <div className="page">

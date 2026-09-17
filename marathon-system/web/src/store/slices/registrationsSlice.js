@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { registrationsApi } from '../../api/endpoints.js';
-import { failed, started, toRejection } from '../helpers.js';
+import { failed, listOf, paginationOf, started, toRejection } from '../helpers.js';
 
 export const createRegistration = createAsyncThunk(
   'registrations/create',
@@ -149,15 +149,15 @@ const registrationsSlice = createSlice({
       .addCase(fetchMyRegistrations.pending, started)
       .addCase(fetchMyRegistrations.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.mine = action.payload.items;
-        state.minePagination = action.payload.pagination;
+        state.mine = listOf(action.payload);
+        state.minePagination = paginationOf(action.payload, state.minePagination);
       })
       .addCase(fetchMyRegistrations.rejected, failed)
       .addCase(fetchRegistrations.pending, started)
       .addCase(fetchRegistrations.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.list = action.payload.items;
-        state.pagination = action.payload.pagination;
+        state.list = listOf(action.payload);
+        state.pagination = paginationOf(action.payload, state.pagination);
       })
       .addCase(fetchRegistrations.rejected, failed)
       .addCase(fetchStatusMeta.fulfilled, (state, action) => {

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { eventsApi } from '../../api/endpoints.js';
-import { failed, started, toRejection } from '../helpers.js';
+import { failed, listOf, paginationOf, started, toRejection } from '../helpers.js';
 
 export const fetchEvents = createAsyncThunk('events/fetchList', async (params = {}, { rejectWithValue }) => {
   try {
@@ -124,10 +124,12 @@ const initialState = {
 };
 
 function applyEvent(state, event) {
+  state.saving = false;
+  if (!event || !event._id) return;
+
   state.current = event;
   state.adminList = state.adminList.map((item) => (item._id === event._id ? event : item));
   state.list = state.list.map((item) => (item._id === event._id ? event : item));
-  state.saving = false;
 }
 
 const eventsSlice = createSlice({
@@ -154,21 +156,21 @@ const eventsSlice = createSlice({
       .addCase(fetchEvents.pending, started)
       .addCase(fetchEvents.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.list = action.payload.items;
-        state.pagination = action.payload.pagination;
+        state.list = listOf(action.payload);
+        state.pagination = paginationOf(action.payload, state.pagination);
       })
       .addCase(fetchEvents.rejected, failed)
       .addCase(fetchAdminEvents.pending, started)
       .addCase(fetchAdminEvents.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.adminList = action.payload.items;
-        state.adminPagination = action.payload.pagination;
+        state.adminList = listOf(action.payload);
+        state.adminPagination = paginationOf(action.payload, state.adminPagination);
       })
       .addCase(fetchAdminEvents.rejected, failed)
       .addCase(fetchEventDetail.pending, started)
       .addCase(fetchEventDetail.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.current = action.payload;
+        state.current = action.payload ?? null;
       })
       .addCase(fetchEventDetail.rejected, failed);
 

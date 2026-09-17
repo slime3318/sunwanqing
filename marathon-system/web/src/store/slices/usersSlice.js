@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { usersApi } from '../../api/endpoints.js';
-import { failed, started, toRejection } from '../helpers.js';
+import { failed, listOf, paginationOf, started, toRejection } from '../helpers.js';
 
 export const fetchUsers = createAsyncThunk('users/fetchList', async (params = {}, { rejectWithValue }) => {
   try {
@@ -72,12 +72,12 @@ const usersSlice = createSlice({
       .addCase(fetchUsers.pending, started)
       .addCase(fetchUsers.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.list = action.payload.items;
-        state.pagination = action.payload.pagination;
+        state.list = listOf(action.payload);
+        state.pagination = paginationOf(action.payload, state.pagination);
       })
       .addCase(fetchUsers.rejected, failed)
       .addCase(fetchUserMeta.fulfilled, (state, action) => {
-        state.roles = action.payload.roles || [];
+        state.roles = Array.isArray(action.payload?.roles) ? action.payload.roles : [];
       });
 
     [assignUserRole, updateUserStatus].forEach((thunk) => {

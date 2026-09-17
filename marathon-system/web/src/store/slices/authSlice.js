@@ -110,8 +110,8 @@ const authSlice = createSlice({
       })
       .addCase(bootstrapSession.fulfilled, (state, action) => {
         state.initializing = false;
-        state.user = action.payload.user;
-        state.permissions = action.payload.permissions || [];
+        state.user = action.payload?.user ?? null;
+        state.permissions = Array.isArray(action.payload?.permissions) ? action.payload.permissions : [];
         state.status = 'succeeded';
       })
       .addCase(bootstrapSession.rejected, (state) => {
@@ -153,14 +153,20 @@ const authSlice = createSlice({
       .addCase(fetchProfile.fulfilled, (state, action) => {
         if (action.payload?.user) {
           state.user = action.payload.user;
-          state.permissions = action.payload.permissions || state.permissions;
+          state.permissions = Array.isArray(action.payload.permissions)
+            ? action.payload.permissions
+            : state.permissions;
         }
       })
       .addCase(updateProfile.pending, started)
       .addCase(updateProfile.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = action.payload.user;
-        state.permissions = action.payload.permissions || state.permissions;
+        if (action.payload?.user) {
+          state.user = action.payload.user;
+          state.permissions = Array.isArray(action.payload.permissions)
+            ? action.payload.permissions
+            : state.permissions;
+        }
         state.notice = '资料已保存';
         state.fieldErrors = {};
       })

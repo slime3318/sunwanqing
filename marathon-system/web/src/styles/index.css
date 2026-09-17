@@ -639,6 +639,20 @@ ul {
   margin: 0;
 }
 
+.crash-detail {
+  max-width: 100%;
+  overflow-x: auto;
+  background: #f7f9fd;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+  font-size: 12px;
+  color: #9c1c1c;
+  text-align: left;
+  white-space: pre-wrap;
+  margin: 0;
+}
+
 /* ---------- 徽标 ---------- */
 .badge {
   display: inline-block;
