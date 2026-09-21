@@ -1,8 +1,9 @@
 # 项目仓库
 
-本仓库包含两个项目，均已部署到公网，可直接点击访问。
+本仓库包含以下项目与课程作业。
 
 - `第一次作业文件/`：Vue 用户登录页面作业
+- `第二次作业/`：Vue 后台用户管理页面作业（登录 + 后台布局 + 用户列表增删查分页）
 - `学期课程作业/`：马拉松赛事报名管理系统（主项目）
 
 ## 在线访问
@@ -90,6 +91,17 @@ sunwanqing/
     marathon-system/
       server/           # Node.js + Express 后端
       web/              # React 前端
+  第二次作业/
+    src/
+      api/              # 请求封装与用户接口
+      components/       # Sidebar、ConfirmDialog
+      layouts/          # AdminLayout 后台布局
+      mock/             # Mock 用户数据与接口
+      router/           # 嵌套路由 + 路由守卫
+      utils/            # token 读写
+      views/            # 登录页、用户管理列表页
+    vite.config.js
+    package.json
 ```
 
 ### 本地运行
@@ -107,3 +119,21 @@ npm run build
 ```
 
 构建产物输出到 `第一次作业文件/vue-login-homework/dist`。
+
+## 3. 后台用户管理页面（第二次作业）
+
+在第一次作业登录页基础上扩展的 Vue 3 后台用户管理作业：嵌套路由 + 后台左右布局 + 用户列表（查询 / 分页 / 删除）。
+
+- 源码与完整文档：[`第二次作业/`](第二次作业/README.md)
+- 路由：`/login` 登录页、`/admin` 后台布局（重定向到 `/admin/user`）、`/admin/user` 用户管理
+- 路由守卫：未登录访问 `/admin/*` 自动跳回登录页；退出登录清空 token
+- Mock 接口：`GET /api/user/list`、`DELETE /api/user/delete`（`dev` / `preview` 下为真实 HTTP 接口，静态部署自动回退前端 Mock）
+- 页面功能：用户名模糊查询、每页 5 条分页、删除二次确认后刷新列表
+- 代码拆分：`components/Sidebar.vue`、`components/ConfirmDialog.vue`、`layouts/AdminLayout.vue`
+- 本地运行：`cd 第二次作业 && npm install && npm run dev`，测试账号 `super_admin` / `123456Ab.`
+
+### 技术栈
+
+- Vue 3（组合式 API，`<script setup>`）
+- Vue Router 4（嵌套路由、路由守卫）
+- Vite（开发 / 构建 + Mock 中间件）
