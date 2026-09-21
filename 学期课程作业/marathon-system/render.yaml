@@ -5,7 +5,7 @@ services:
     name: marathon-api
     runtime: node
     plan: free
-    rootDir: marathon-system/server
+    rootDir: 学期课程作业/marathon-system/server
     buildCommand: npm install --omit=dev --no-audit --no-fund
     startCommand: node src/index.js
     healthCheckPath: /api/health

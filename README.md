@@ -2,6 +2,9 @@
 
 本仓库包含两个项目，均已部署到公网，可直接点击访问。
 
+- `第一次作业文件/`：Vue 用户登录页面作业
+- `学期课程作业/`：马拉松赛事报名管理系统（主项目）
+
 ## 在线访问
 
 | 项目 | 网址 |
@@ -21,11 +24,11 @@
 
 技术栈：React + Redux Toolkit + Vite / Node.js + Express + MongoDB / Docker。
 
-- 源码与完整文档：[`marathon-system/`](marathon-system/README.md)
+- 源码与完整文档：[`学期课程作业/marathon-system/`](学期课程作业/marathon-system/README.md)
 - 前端页面：首页、赛事列表与详情、在线报名、我的报名、个人中心、管理后台（数据概览 / 赛事管理 / 报名管理 / 用户与权限）
 - 后端接口：`/api/auth`、`/api/users`、`/api/events`、`/api/registrations`、`/api/stats`
-- 本地运行：`cd marathon-system/server && npm install && npm run seed && npm run dev`，另开终端 `cd marathon-system/web && npm install && npm run dev`
-- 部署方式：MongoDB Atlas + Render + Cloudflare Pages，或 `docker compose up -d --build`
+- 本地运行：`cd 学期课程作业/marathon-system/server && npm install && npm run seed && npm run dev`，另开终端 `cd 学期课程作业/marathon-system/web && npm install && npm run dev`
+- 部署方式：MongoDB Atlas + Render + Cloudflare Pages，或 `cd 学期课程作业/marathon-system && docker compose up -d --build`（注意 Render / Cloudflare 的 Root Directory 必须带上 `学期课程作业/marathon-system/` 前缀）
 - 自动化测试：后端 25 项单元测试 + 23 项端到端冒烟测试，前端 8 项回归测试（`npm test`）
 
 ## 2. 用户登录页面展示（作业）
@@ -42,11 +45,11 @@
 
 ### 页面预览
 
-![登录页面](docs/login-page.png)
+![登录页面](第一次作业文件/docs/login-page.png)
 
 | 表单校验提示 | 手机端适配 |
 | --- | --- |
-| ![验证码错误提示](docs/login-error.png) | ![手机端效果](docs/login-mobile.png) |
+| ![验证码错误提示](第一次作业文件/docs/login-error.png) | ![手机端效果](第一次作业文件/docs/login-mobile.png) |
 
 ### 功能说明
 
@@ -67,27 +70,32 @@
 ```text
 sunwanqing/
   README.md
-  docs/
-    login-page.png
-    login-error.png
-    login-mobile.png
-  vue-login-homework/
-    src/
-      Login.vue       # 登录页面组件
-      App.vue         # 根组件
-      main.js         # 应用入口
-      style.css       # 全局样式
-    public/
-      favicon.svg
-    index.html
-    vite.config.js
-    package.json
+  第一次作业文件/
+    docs/
+      login-page.png
+      login-error.png
+      login-mobile.png
+    vue-login-homework/
+      src/
+        Login.vue       # 登录页面组件
+        App.vue         # 根组件
+        main.js         # 应用入口
+        style.css       # 全局样式
+      public/
+        favicon.svg
+      index.html
+      vite.config.js
+      package.json
+  学期课程作业/
+    marathon-system/
+      server/           # Node.js + Express 后端
+      web/              # React 前端
 ```
 
 ### 本地运行
 
 ```bash
-cd vue-login-homework
+cd 第一次作业文件/vue-login-homework
 npm install
 npm run dev
 ```
@@ -98,4 +106,4 @@ npm run dev
 npm run build
 ```
 
-构建产物输出到 `vue-login-homework/dist`。
+构建产物输出到 `第一次作业文件/vue-login-homework/dist`。
