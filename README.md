@@ -11,9 +11,9 @@
 | 项目 | 网址 |
 | --- | --- |
 | **马拉松赛事报名管理系统**（主项目） | **[https://marathon-registration.pages.dev](https://marathon-registration.pages.dev)** |
-| 用户登录页面（作业） | [https://login-homework.pages.dev](https://login-homework.pages.dev) |
+| 用户登录页 + 后台用户管理（作业一 + 作业二） | [https://login-homework.pages.dev](https://login-homework.pages.dev) |
 
-> 两个站点均部署于 Cloudflare Pages。
+> 站点均部署于 Cloudflare Pages；`login-homework.pages.dev` 已更新为含「后台用户管理」的第二次作业版本。
 
 ---
 
@@ -43,6 +43,8 @@
 **[https://login-homework.pages.dev](https://login-homework.pages.dev)**
 
 > 部署于 Cloudflare Pages。
+>
+> 当前线上版本已扩展为第二次作业：登录后进入后台用户管理（详见第 3 节）。
 
 ### 页面预览
 
@@ -123,6 +125,8 @@ npm run build
 ## 3. 后台用户管理页面（第二次作业）
 
 在第一次作业登录页基础上扩展的 Vue 3 后台用户管理作业：嵌套路由 + 后台左右布局 + 用户列表（查询 / 分页 / 删除）。
+
+**在线访问：[https://login-homework.pages.dev](https://login-homework.pages.dev)**（登录 `super_admin` / `123456Ab.` 后进入后台用户管理）
 
 - 源码与完整文档：[`第二次作业/`](第二次作业/README.md)
 - 路由：`/login` 登录页、`/admin` 后台布局（重定向到 `/admin/user`）、`/admin/user` 用户管理
