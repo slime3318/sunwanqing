@@ -61,7 +61,7 @@
 ## 三、目录结构
 
 ```text
-学期课程作业/marathon-system/
+marathon-system/
   README.md
   docker-compose.yml          # 一键自托管：mongo + api + web
   render.yaml                 # Render 后端部署蓝图
@@ -114,7 +114,7 @@
 ### 1. 后端
 
 ```bash
-cd 学期课程作业/marathon-system/server
+cd marathon-system/server
 npm install
 # 复制 .env.example 为 .env，按需修改 MONGODB_URI / JWT_SECRET
 npm run seed    # 写入演示账号与演示赛事（可重复执行）
@@ -124,7 +124,7 @@ npm run dev     # http://localhost:4000/api
 ### 2. 前端
 
 ```bash
-cd 学期课程作业/marathon-system/web
+cd marathon-system/web
 npm install
 npm run dev      # http://localhost:5173（已配置 /api 代理到 4000 端口）
 ```
@@ -143,7 +143,7 @@ npm run dev      # http://localhost:5173（已配置 /api 代理到 4000 端口�
 ### 4. 自动化测试
 
 ```bash
-cd 学期课程作业/marathon-system/server
+cd marathon-system/server
 
 npm test                # 单元测试（25 项，无需数据库）：身份证校验、RBAC 权限矩阵、zod 表单校验、分页边界、虚拟字段与关键字转义回归
 npm run smoke           # 端到端冒烟测试（23 项），需要可用的 MONGODB_URI，跑完自动清理测试数据
@@ -162,7 +162,7 @@ npm test                # 前端回归测试（8 项，无需浏览器）：接�
 ### 5. Docker 自托管
 
 ```bash
-cd 学期课程作业/marathon-system
+cd marathon-system
 JWT_SECRET=your-strong-secret docker compose up -d --build
 # 前端 http://localhost:8080  后端 http://localhost:4000/api
 docker compose exec api node scripts/seed.js   # 可选：写入演示数据
@@ -174,7 +174,7 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
 
 推荐组合（全部有免费额度）：**MongoDB Atlas + Render + Cloudflare Pages**。
 
-> **目录迁移提醒**：本项目的源码位于仓库的 `学期课程作业/marathon-system/` 子目录。若你此前已用旧路径（`marathon-system/server`、`marathon-system/web`）创建过 Render 服务或 Cloudflare Pages 项目，必须先到对应控制台把 **Root Directory / Root directory** 改成带前缀的新路径，否则下一次推送触发的构建会因找不到目录而失败；`render.yaml` 中的 `rootDir` 只对由该 Blueprint 创建的服务生效，不会改写已有服务的设置。
+> **目录说明**：本项目的源码位于仓库根目录的 `marathon-system/`。Render 后端服务的 Root Directory 为 `marathon-system/server`，Cloudflare Pages 前端的 Root directory 为 `marathon-system/web`；`render.yaml` 中的 `rootDir` 已按此配置。
 
 ### 步骤 1：创建云数据库（MongoDB Atlas）
 
@@ -187,10 +187,10 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
 ### 步骤 2：部署后端（Render）
 
 1. 把本仓库推送到 GitHub / Gitee。
-2. Render 控制台 → `New` → `Blueprint` → 选择该仓库，并在 **Blueprint Path** 中填写 `学期课程作业/marathon-system/render.yaml`
+2. Render 控制台 → `New` → `Blueprint` → 选择该仓库，并在 **Blueprint Path** 中填写 `marathon-system/render.yaml`
    （Render 默认只在仓库根目录查找 `render.yaml`，本文件位于子目录，必须手动指定路径）；
    或手动 `New → Web Service`：
-   - Root Directory：`学期课程作业/marathon-system/server`
+   - Root Directory：`marathon-system/server`
    - Build Command：`npm install --omit=dev --no-audit --no-fund`
    - Start Command：`node src/index.js`
    - Health Check Path：`/api/health`
@@ -211,7 +211,7 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
 
 1. Cloudflare 控制台 → `Workers & Pages` → `Create` → `Pages` → 连接 Git 仓库。
 2. 构建配置：
-   - Root directory：`学期课程作业/marathon-system/web`
+   - Root directory：`marathon-system/web`
    - Framework preset：`Vite`
    - Build command：`npm install && npm run build`
    - Build output directory：`dist`
@@ -293,7 +293,7 @@ docker compose exec api node scripts/seed.js   # 可选：写入演示数据
 | 页面打开后**一闪变白屏** | 静态托管把未命中的 `/api` 路径回退成 `index.html`（200 + HTML），前端把 HTML 当成了 JSON 数据。已在 `api/client.js` 加响应信封校验、在 `store/helpers.js` 加列表兜底、并加了全局 `ErrorBoundary`，现在会显示明确的红色提示。若仍白屏，说明 API 地址（`VITE_API_BASE_URL`）没配好。 |
 | 公网页面所有接口报跨域 | 后端的 `CORS_ORIGIN` 与实际访问域名不一致。必须带 `https://`、不带结尾 `/`、不带 `www`，多域名用英文逗号分隔且不加空格。 |
 | 前端页脚/接口提示「无法连接后端服务」 | 后端未部署或 `VITE_API_BASE_URL` 未配置。这是后端上线前的预期状态。 |
-| Cloudflare 构建报 `Missing script: build` | 构建时没在 `学期课程作业/marathon-system/web` 目录下执行。检查 Pages 的 **Root directory** 设置。 |
+| Cloudflare 构建报 `Missing script: build` | 构建时没在 `marathon-system/web` 目录下执行。检查 Pages 的 **Root directory** 设置。 |
 | Cloudflare 提示 `_redirects` 无限循环 | 该规则已被 Cloudflare 拒绝并忽略；本项目已删除 `public/_redirects`，平台的默认 SPA 回退足够。 |
 | 后端启动报数据库连接超时 | MongoDB 服务未启动（本地）或 Atlas 白名单未加 `0.0.0.0/0`（云端）。 |
 | Atlas 注册报「出现了一个意想不到的问题」 | 注册表单依赖 Google reCAPTCHA，国内直连拿不到校验 token。改用 `Sign up with GitHub` 授权注册。 |

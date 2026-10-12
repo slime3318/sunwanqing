@@ -4,7 +4,7 @@
 
 - `第一次作业文件/`：Vue 用户登录页面作业
 - `第二次作业/`：Vue 后台用户管理页面作业（登录 + 后台布局 + 用户列表增删查分页）
-- `学期课程作业/`：马拉松赛事报名管理系统（主项目）
+- `marathon-system/`：马拉松赛事报名管理系统（主项目）
 
 ## 在线访问
 
@@ -25,11 +25,11 @@
 
 技术栈：React + Redux Toolkit + Vite / Node.js + Express + MongoDB / Docker。
 
-- 源码与完整文档：[`学期课程作业/marathon-system/`](学期课程作业/marathon-system/README.md)
+- 源码与完整文档：[`marathon-system/`](marathon-system/README.md)
 - 前端页面：首页、赛事列表与详情、在线报名、我的报名、个人中心、管理后台（数据概览 / 赛事管理 / 报名管理 / 用户与权限）
 - 后端接口：`/api/auth`、`/api/users`、`/api/events`、`/api/registrations`、`/api/stats`
-- 本地运行：`cd 学期课程作业/marathon-system/server && npm install && npm run seed && npm run dev`，另开终端 `cd 学期课程作业/marathon-system/web && npm install && npm run dev`
-- 部署方式：MongoDB Atlas + Render + Cloudflare Pages，或 `cd 学期课程作业/marathon-system && docker compose up -d --build`（注意 Render / Cloudflare 的 Root Directory 必须带上 `学期课程作业/marathon-system/` 前缀）
+- 本地运行：`cd marathon-system/server && npm install && npm run seed && npm run dev`，另开终端 `cd marathon-system/web && npm install && npm run dev`
+- 部署方式：MongoDB Atlas + Render + Cloudflare Pages，或 `cd marathon-system && docker compose up -d --build`（注意 Render / Cloudflare 的 Root Directory 为 `marathon-system/server` / `marathon-system/web`）
 - 自动化测试：后端 25 项单元测试 + 23 项端到端冒烟测试，前端 8 项回归测试（`npm test`）
 
 ## 2. 用户登录页面展示（作业）
@@ -89,8 +89,7 @@ sunwanqing/
       index.html
       vite.config.js
       package.json
-  学期课程作业/
-    marathon-system/
+  marathon-system/
       server/           # Node.js + Express 后端
       web/              # React 前端
   第二次作业/
