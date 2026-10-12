@@ -4,7 +4,7 @@
 
 **在线访问：[https://marathon-registration.pages.dev](https://marathon-registration.pages.dev)**
 
-> 前端已部署于 Cloudflare Pages。后端 API 与数据库的部署步骤见第五章；完成后需在 Cloudflare Pages 中把环境变量 `VITE_API_BASE_URL` 指向后端地址并重新部署。
+> 当前线上部署：前端在 Cloudflare Pages（`VITE_API_BASE_URL` 已指向后端），后端在 Railway（`https://sunwanqing-production.up.railway.app/api`），数据库用 MongoDB Atlas。演示账号：超级管理员 `13800000000` / `Admin123456`，运营人员 `13800000001` / `Operator123456`，赛事编辑员 `13800000002` / `Editor123456`，选手 `13900000001` / `Runner123456`。后端部署步骤见第五章（本方案用 Railway 替代 Render，步骤一致）。
 
 - 前端：React 18 + Redux Toolkit + React Router + Vite
 - 后端：Node.js + Express + MongoDB (Mongoose)

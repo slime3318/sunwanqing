@@ -13,7 +13,8 @@
 | **马拉松赛事报名管理系统**（主项目） | **[https://marathon-registration.pages.dev](https://marathon-registration.pages.dev)** |
 | 用户登录页 + 后台用户管理（作业一 + 作业二） | [https://login-homework.pages.dev](https://login-homework.pages.dev) |
 
-> 站点均部署于 Cloudflare Pages；`login-homework.pages.dev` 已更新为含「后台用户管理」的第二次作业版本。
+> 前端站点均部署于 Cloudflare Pages；`login-homework.pages.dev` 已更新为含「后台用户管理」的第二次作业版本。
+> 马拉松系统后端 API 部署于 Railway：`https://sunwanqing-production.up.railway.app/api`（MongoDB Atlas 数据库）。
 
 ---
 
